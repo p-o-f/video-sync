@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Share Queue",
+  "version": "1.0",
+  "description": "Easily share YouTube videos with friends and see if they have watched them.",
+  "permissions": [
+    "identity", 
+    "storage", 
+    "tabs",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ]
+}
