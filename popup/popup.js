@@ -1,4 +1,9 @@
-import { initFirebase, signInWithGoogle, getUser, listenForVideos } from '../firebase.js';
+import {
+  initFirebase,
+  signInWithGoogle,
+  getUser,
+  listenForVideos,
+} from "../firebase.js";
 
 window.popupData = () => ({
   user: null,
@@ -7,6 +12,12 @@ window.popupData = () => ({
 
   async init() {
     initFirebase();
+    getRedirectResult(auth).then((result) => {
+      if (result && result.user) {
+        this.user = result.user;
+      }
+    });
+
     this.user = await getUser();
     if (this.user) {
       listenForVideos(this.user.email, (data) => {
