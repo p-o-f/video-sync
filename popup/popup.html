@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" x-data="popupData()" x-init="init()">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Queue</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+</head>
+<body class="p-4 text-sm bg-gray-100 text-gray-800 w-96">
+  <h1 class="text-xl font-bold mb-4">📺 Shared Videos</h1>
+
+  <button class="mb-4 px-4 py-2 bg-blue-500 text-white rounded" @click="signIn()">Sign In with Google</button>
+
+  <template x-if="user">
+    <div>
+      <p class="mb-2">Signed in as: <strong x-text="user.email"></strong></p>
+
+      <h2 class="font-semibold mt-4">Videos Shared With You:</h2>
+      <ul class="list-disc ml-5 mt-1">
+        <template x-for="video in sharedWithYou" :key="video.id">
+          <li x-text="video.title"></li>
+        </template>
+      </ul>
+
+      <h2 class="font-semibold mt-4">Videos You Shared:</h2>
+      <ul class="list-disc ml-5 mt-1">
+        <template x-for="video in youShared" :key="video.id">
+          <li x-text="video.title"></li>
+        </template>
+      </ul>
+    </div>
+  </template>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
