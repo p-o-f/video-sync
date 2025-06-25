@@ -1,17 +1,18 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getAuth,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore,
   collection,
   query,
   onSnapshot,
-  where
+  where,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Firebase config
@@ -22,27 +23,30 @@ const firebaseConfig = {
   storageBucket: "video-sync-10531.firebasestorage.app",
   messagingSenderId: "820825199730",
   appId: "1:820825199730:web:13c7ac7ace788a95cb5eeb",
-  measurementId: "G-78R129K63L"
+  measurementId: "G-78R129K63L",
 };
-
 
 let app, auth, db;
 
 export function initFirebase() {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
+  if (!app) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  }
 }
+
+// Export auth so popup.js can use it (for getRedirectResult)
+export { auth, getRedirectResult };
 
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   await signInWithRedirect(auth, provider);
-
 }
 
 export function getUser() {
   return new Promise((resolve) => {
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, (user) => {
       resolve(user);
     });
   });
@@ -55,12 +59,12 @@ export function listenForVideos(userEmail, callback) {
   let sharedWithYou = [], youShared = [];
 
   onSnapshot(q1, (snapshot) => {
-    sharedWithYou = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    sharedWithYou = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     callback({ sharedWithYou, youShared });
   });
 
   onSnapshot(q2, (snapshot) => {
-    youShared = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    youShared = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     callback({ sharedWithYou, youShared });
   });
 }

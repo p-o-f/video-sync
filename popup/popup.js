@@ -3,33 +3,62 @@ import {
   signInWithGoogle,
   getUser,
   listenForVideos,
+  auth,
+  getRedirectResult,
 } from "../firebase.js";
 
-window.popupData = () => ({
-  user: null,
-  sharedWithYou: [],
-  youShared: [],
+document.addEventListener("DOMContentLoaded", async () => {
+  initFirebase();
 
-  async init() {
-    initFirebase();
-    getRedirectResult(auth).then((result) => {
-      if (result && result.user) {
-        this.user = result.user;
-      }
+  // Handle redirect sign-in result if applicable
+  try {
+    const result = await getRedirectResult(auth);
+    if (result && result.user) {
+      renderUser(result.user);
+      setupVideoListeners(result.user.email);
+    }
+  } catch (err) {
+    console.error("Error with redirect result:", err);
+  }
+
+  const user = await getUser();
+  if (user) {
+    renderUser(user);
+    setupVideoListeners(user.email);
+  }
+
+  document.getElementById("signInButton").addEventListener("click", async () => {
+    await signInWithGoogle();
+    const signedInUser = await getUser();
+    if (signedInUser) {
+      renderUser(signedInUser);
+      setupVideoListeners(signedInUser.email);
+    }
+  });
+});
+
+function renderUser(user) {
+  document.getElementById("userSection").style.display = "block";
+  document.getElementById("userEmail").textContent = user.email;
+}
+
+function setupVideoListeners(email) {
+  listenForVideos(email, (data) => {
+    const sharedWithYouList = document.getElementById("sharedWithYouList");
+    const youSharedList = document.getElementById("youSharedList");
+
+    sharedWithYouList.innerHTML = "";
+    data.sharedWithYou.forEach((video) => {
+      const li = document.createElement("li");
+      li.textContent = video.title;
+      sharedWithYouList.appendChild(li);
     });
 
-    this.user = await getUser();
-    if (this.user) {
-      listenForVideos(this.user.email, (data) => {
-        this.sharedWithYou = data.sharedWithYou;
-        this.youShared = data.youShared;
-      });
-    }
-  },
-
-  async signIn() {
-    await signInWithGoogle();
-    this.user = await getUser();
-    if (this.user) this.init();
-  },
-});
+    youSharedList.innerHTML = "";
+    data.youShared.forEach((video) => {
+      const li = document.createElement("li");
+      li.textContent = video.title;
+      youSharedList.appendChild(li);
+    });
+  });
+}
