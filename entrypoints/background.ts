@@ -65,7 +65,7 @@ async function firebaseAuth() {
     const auth = await getAuth();
     console.log("User Authenticated", auth);
     return auth;
-  } catch (err: any) {
+  } catch (err: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
     console.error("Bruh", err);
     if (err.code === "auth/operation-not-allowed") {
       console.error(
@@ -82,9 +82,9 @@ async function firebaseAuth() {
 }
 
 async function authListener(
-  message: any,
+  message: any, // eslint-disable-line @typescript-eslint/no-explicit-any
   _sender: Browser.runtime.MessageSender,
-  sendResponse: (response?: any) => void,
+  sendResponse: (response?: any) => void, // eslint-disable-line @typescript-eslint/no-explicit-any
 ) {
   if (message.action == "signIn") {
     firebaseAuth().then((auth) => {
