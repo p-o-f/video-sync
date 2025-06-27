@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import './App.css';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '@/utils/firebase';
+// import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+// import { auth } from '@/utils/firebase';
 
 function App() {
   const [count, setCount] = useState(0);
 
+  // https://firebase.google.com/docs/auth/web/chrome-extension
   const handleLogin = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
+    // const provider = new GoogleAuthProvider();
+    browser.runtime.sendMessage({ action: "signIn" }, (res) => { console.log("handle", res) })
   }
   return (
     <>

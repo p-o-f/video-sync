@@ -5,8 +5,9 @@ export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
     content_security_policy: {
-      extension_pages:
-        "script-src 'self' https://www.google-analytics.com/ https://apis.google.com/; object-src 'self'",
+      extension_pages: "script-src 'self'; object-src 'self'",
     },
+    permissions: ["identity", "offscreen", "storage"],
+    // host_permissions: ["https://www.googleapis.com/"],
   },
 });
