@@ -16,7 +16,7 @@ function App() {
       <h1>yo</h1>
       <button onClick={handleLogin}>Login</button>
       <div className="card">
-        <button onClick={() => { console.log("hi"); setCount((count) => count + 1) }}>
+        <button onClick={() => { console.log("incremented count via user button press"); setCount((count) => count + 1) }}>
           count is {count}
         </button>
       </div>

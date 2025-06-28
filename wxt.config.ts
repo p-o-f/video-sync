@@ -4,6 +4,7 @@ import { defineConfig } from "wxt";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
+    manifest_version: 3,
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self'",
     },
